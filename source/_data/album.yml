@@ -1,0 +1,101 @@
+- class_name: 快快快夸我女朋友超级好看~
+  path_name: /meinvImgs
+  type: 2
+  description: 人超级美！
+  cover: /img/wq/meinv1.jpg
+  rowHeight: 220
+  limit: 10
+  lazyload: true
+  btnLazyload: false
+  url: false
+  album_list:
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv9.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv8.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv1.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv2.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv3.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv4.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv5.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv6.jpg
+    - date: 2023/3/16 01:00:00
+      content: 超级好的王琪。
+      address: 河南平顶山
+      from: 王琪❤
+      image:
+        - /img/wq/meinv7.jpg
+
+- class_name: 快快快夸我女朋友人超级好~
+  path_name: /chatImgs
+  type: 1
+  description: 心超级好！
+  cover: /img/wq/chatCover.jpg
+
+  album_list:
+    - date: 2023-5-5
+      content: 能让你开心就是我的目的
+      image:
+        - /img/wq/chat9.jpg
+    - date: 2023-5-4
+      content: 小琪让我好好吃饭
+      image:
+        - /img/wq/chat7.jpg
+    - date: 2023-3-29
+      content: 初遇心动qq
+      image:
+        - /img/wq/chat3.jpg
+        - /img/wq/chat4.jpg
+        - /img/wq/chat5.jpg
+        - /img/wq/chat6.jpg
+
+    - date: 2023-4-7
+      content: 阴暗世界里的小太阳
+      image:
+        - /img/wq/chat1.jpg
+    - date: 2023-4-29
+      content: 她也会考虑替我分担
+      image:
+        - /img/wq/chat2.jpg
+    - date: 2023-4-13
+      content: 不开心吗
+      image:
+        - /img/wq/chat8.jpg

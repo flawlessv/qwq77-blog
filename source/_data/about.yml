@@ -1,0 +1,104 @@
+- class_name: 关于页
+  subtitle: 溫柔至極 人間寶藏✨
+  avatarImg: /img/avatar.jpg
+  name: 赵世伟
+  description: 是一名 前端工程师、学生、独立开发者、博主
+  aboutsiteTips:
+    tips: 追求
+    title1: 源于
+    title2: 热爱而去 感受
+    word:
+      - 学习
+      - 生活
+      - 程序
+      - 体验
+  helloAbout: LOVE QIQI!
+  skillsTips:
+    tips: 技能
+    title: 开启创造力
+  careers:
+    tips: 生涯
+    title: 无限进步，热爱React
+    item :
+      - EDU,物联网工程专业
+      # - HTML,CSS,JS,TS
+      # - React,Vue,Node
+      # - JAVA,SSM,MyBatis,MySQL
+    img: https://img02.anzhiy.cn/adminuploads/1/2022/09/26/6330e9bcc39cc.png
+  statistic:
+    link: /archives
+    text: 文章隧道
+    cover: https://img02.anzhiy.cn/adminuploads/1/2022/09/23/632d634f8376d.jpg
+  map:
+    title: 我现在住在
+    StrengthenTitle: 中国，河南省，平顶山市
+    background: https://img02.anzhiy.cn/adminuploads/1/2022/09/24/632e6f48981d8.jpg
+    backgroundDark: https://img02.anzhiy.cn/adminuploads/1/2022/09/26/6330ebf1f3e65.jpg
+  selfInfo:
+    selfInfoTips1: 生于
+    selfInfoContentYear: 2000
+    selfInfoTips2: 河南城建学院
+    selfInfoContent2: 物联网工程
+    selfInfoTips3: 现在职业
+    selfInfoContent3: 大三学生👨‍🎓
+  personalities:
+    author_name: 大帅哥
+    personality_type: 超级好~
+    photo_url: /img/zsw.jpg
+    personality_img: https://npm.elemecdn.com/anzhiyu-blog@2.0.8/img/svg/ESFJ-A.svg
+    name_url: https://www.16personalities.com/ch/esfj-%E4%BA%BA%E6%A0%BC
+  maxim:
+    maxim_tips: about
+    maxim_top: 溫柔至極 人間寶藏
+    maxim_bottom: Zhao shi wei.
+  buff:
+    buff_tips: 特长
+    buff_top: 积极向上 学习能力强
+    buff_bottom: LOVE 77
+  game:
+    game_tips: 爱好游戏
+    game_title: 英雄联盟  
+    game_uid: "艾欧尼亚: 大三一定好好学习"
+    game_bg: /img/lol.png
+  comic:
+    comic_tips: 女朋友
+    comic_title: 小琪
+    comic_list:
+      - name: 小琪琪
+        href: http://qwq77.top/meinvImgs/
+        cover: /img/wq/meinv6.jpg
+      - name: 小琪琪
+        href: http://qwq77.top/meinvImgs/
+        cover: /img/wq/meinv8.jpg
+      - name: 小琪琪
+        href: http://qwq77.top/meinvImgs/
+        cover: /img/wq/meinv4.jpg
+      - name: 小琪琪
+        href: http://qwq77.top/meinvImgs/
+        cover: /img/wq/meinv3.jpg
+      - name: 小琪琪
+        href: http://qwq77.top/meinvImgs/
+        cover: /img/wq/meinv2.jpg
+  like:
+    like_tips: 兴趣爱好
+    like_title: 美图、美文、音乐、
+    like_bg: https://img02.anzhiy.cn/adminuploads/1/2022/09/24/632f0dd8f33c6.webp
+    like_bottom: 古诗词、新技术
+  music:
+    music_tips: 网易云
+    music_title: 春光摧折
+    music_bg: /img/wyy.png
+    music_link: /music
+  reward_list:
+    - name: 王琪
+      amount: 520
+      datatime: 2023-04-28
+    - name: LK66
+      amount: 66.6
+      datatime: 2023-03-24
+    - name: 张时貳
+      amount: 6.6
+      datatime: 2023-01-22
+
+
+  extra: false
