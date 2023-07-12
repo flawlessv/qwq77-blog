@@ -1,20 +1,20 @@
 ---
 title: 实现一个按钮N种状态
 tags:
-  - 实习
+  - 实习收获
   - CSS
   - React
-# categories:
-#   - 前端
+categories:
+  - 实习
 ---
 
-#### 需求
+### 需求
 
 废话不多说直接上图
-![Alt text](/public/img/shixi/button1.gif)
+![Alt text](../../imgs/btn1.gif)
 没错！一个按钮要有四种状态及其不同的 hover 态，并且在点击安装后鼠标尚未离开按钮的时候（也就是第一次 Hover 的时候）要禁用 Hover
 
-#### 实现
+### 实现
 
 ```tsx
 <div

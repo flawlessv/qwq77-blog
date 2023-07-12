@@ -1,7 +1,7 @@
 ---
 title: 对AJAX的理解，实现一个AJAX请求
 tags:
-  - 面试
+  - ONE
   - JavaScript
 # categories:
 #   - 前端

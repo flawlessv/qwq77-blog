@@ -1,7 +1,7 @@
 ---
 title: js中的防抖和节流
 tags:
-  - 面试
+  - ONE
   - JavaScript
 # categories:
 #   - 前端

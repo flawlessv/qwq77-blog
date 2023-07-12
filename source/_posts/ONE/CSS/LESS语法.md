@@ -1,10 +1,7 @@
 ---
 title: LESS语法
 tags:
-  - 实习
   - CSS
-# categories:
-#   - 前端
 ---
 
 1\. less 简介

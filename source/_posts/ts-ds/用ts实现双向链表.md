@@ -2,6 +2,8 @@
 title: 使用TypeScript实现双向链表
 tags:
   - TypeScript
+  - 链表
+categories:
   - 数据结构
 ---
 

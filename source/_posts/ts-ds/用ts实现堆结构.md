@@ -3,6 +3,8 @@ title: 用ts实现堆结构
 cover: "https://www.dmoe.cc/random.php"
 tags:
   - TypeScript
+  - 堆
+categories:
   - 数据结构
 ---
 

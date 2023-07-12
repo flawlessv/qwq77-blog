@@ -1,7 +1,7 @@
 ---
 title: js中函数提升和变量提升有什么区别
 tags:
-  - 面试
+  - ONE
   - JavaScript
 # categories:
 #   - 前端

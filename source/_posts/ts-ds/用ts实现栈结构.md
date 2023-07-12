@@ -2,6 +2,8 @@
 title: 使用TypeScript实现栈
 tags:
   - TypeScript
+  - 栈
+categories:
   - 数据结构
 ---
 

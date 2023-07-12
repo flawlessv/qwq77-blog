@@ -2,11 +2,12 @@
 title: 深入解析EventLoop 和浏览器渲染、帧动画、空闲回调
 tags:
   - 浏览器原理
-  - 面试
+  - ONE
   - JavaScript
 ---
-前言
---
+
+### 前言
+
 
 关于 Event Loop 的文章很多，但是有很多只是在讲「宏任务」、「微任务」，我先提出几个问题：
 
@@ -19,8 +20,9 @@ tags:
 
 这也是本文想要从规范解读入手，深挖底层的动机之一。本文会酌情从规范中排除掉一些比较晦涩难懂，或者和主流程不太相关的概念。更详细的版本也可以直接去读这个规范，不过比较费时费力。
 
-事件循环
-----
+### 事件循环
+
+---
 
 我们先依据[HTML 官方规范](https://link.juejin.cn/?target=https%3A%2F%2Fhtml.spec.whatwg.org%2Fmultipage%2Fwebappapis.html%23task-queue "https://html.spec.whatwg.org/multipage/webappapis.html#task-queue")从浏览器的事件循环讲起，因为剩下的 API 都在这个循环中进行，它是浏览器调度任务的基础。
 
@@ -31,32 +33,25 @@ tags:
 ### 流程
 
 1.  从任务队列中取出一个**宏任务**并执行。
-    
 2.  检查微任务队列，执行并清空**微任务**队列，如果在微任务的执行中又加入了新的微任务，也会在这一步一起执行。
-    
 3.  进入更新渲染阶段，判断是否需要渲染，这里有一个 `rendering opportunity` 的概念，也就是说不一定每一轮 event loop 都会对应一次浏览 器渲染，要根据屏幕刷新率、页面性能、页面是否在后台运行来共同决定，通常来说这个渲染间隔是固定的。（所以多个 task 很可能在一次渲染之间执行）
-    
-    *   浏览器会尽可能的保持帧率稳定，例如页面性能无法维持 60fps（每 16.66ms 渲染一次）的话，那么浏览器就会选择 30fps 的更新速率，而不是偶尔丢帧。
-    *   如果浏览器上下文不可见，那么页面会降低到 4fps 左右甚至更低。
-    *   如果满足以下条件，也会跳过渲染：
-        1.  浏览器判断更新渲染不会带来视觉上的改变。
-        2.  `map of animation frame callbacks` 为空，也就是帧动画回调为空，可以通过 `requestAnimationFrame` 来请求帧动画。
+
+    - 浏览器会尽可能的保持帧率稳定，例如页面性能无法维持 60fps（每 16.66ms 渲染一次）的话，那么浏览器就会选择 30fps 的更新速率，而不是偶尔丢帧。
+    - 如果浏览器上下文不可见，那么页面会降低到 4fps 左右甚至更低。
+    - 如果满足以下条件，也会跳过渲染：
+      1.  浏览器判断更新渲染不会带来视觉上的改变。
+      2.  `map of animation frame callbacks` 为空，也就是帧动画回调为空，可以通过 `requestAnimationFrame` 来请求帧动画。
+
 4.  如果上述的判断决定本轮**不需要渲染**，那么**下面的几步也不会继续运行**：
-    
+
     > This step enables the user agent to prevent the steps below from running for other reasons, for example, to ensure certain tasks are executed immediately after each other, with only microtask checkpoints interleaved (and without, e.g., animation frame callbacks interleaved). Concretely, a user agent might wish to coalesce timer callbacks together, with no intermediate rendering updates. 有时候浏览器希望两次「定时器任务」是合并的，他们之间只会穿插着 `microTask`的执行，而不会穿插屏幕渲染相关的流程（比如`requestAnimationFrame`，下面会写一个例子）。
-    
+
 5.  对于需要渲染的文档，如果窗口的大小发生了变化，执行监听的 `resize` 方法。
-    
 6.  对于需要渲染的文档，如果页面发生了滚动，执行 `scroll` 方法。
-    
 7.  对于需要渲染的文档，执行帧动画回调，也就是 **`requestAnimationFrame`** 的回调。（后文会详解）
-    
 8.  对于需要渲染的文档， 执行 IntersectionObserver 的回调。
-    
 9.  对于需要渲染的文档，**重新渲染**绘制用户界面。
-    
-10.  判断 `task队列`和`microTask`队列是否都为空，如果是的话，则进行 `Idle` 空闲周期的算法，判断是否要执行 **`requestIdleCallback`** 的回调函数。（后文会详解）
-    
+10. 判断 `task队列`和`microTask`队列是否都为空，如果是的话，则进行 `Idle` 空闲周期的算法，判断是否要执行 **`requestIdleCallback`** 的回调函数。（后文会详解）
 
 对于`resize` 和 `scroll`来说，并不是到了这一步才去执行滚动和缩放，那岂不是要延迟很多？浏览器当然会立刻帮你滚动视图，根据[CSSOM 规范](https://link.juejin.cn/?target=https%3A%2F%2Fdrafts.csswg.org%2Fcssom-view%2F%23scrolling-events "https://drafts.csswg.org/cssom-view/#scrolling-events")所讲，浏览器会保存一个 `pending scroll event targets`，等到事件循环中的 `scroll`这一步，去派发一个事件到对应的目标上，驱动它去执行监听的回调函数而已。`resize`也是同理。
 
@@ -85,8 +80,9 @@ tags:
 
 下面的章节中咱们来详细聊聊 `requestIdleCallback` 和 `requestAnimationFrame`。
 
-requestAnimationFrame
----------------------
+### requestAnimationFrame
+
+---
 
 > 以下内容中 `requestAnimationFrame`简称为`rAF`
 
@@ -103,14 +99,13 @@ requestAnimationFrame
 
 假设我们现在想要快速的让屏幕上闪烁 `红`、`蓝`两种颜色，保证用户可以观察到，如果我们用 `setTimeout` 来写，并且带着我们长期的误解「宏任务之间一定会伴随着浏览器绘制」，那么你会得到一个预料之外的结果。
 
-```
+```js
 setTimeout(() => {
-  document.body.style.background = "red"
+  document.body.style.background = "red";
   setTimeout(() => {
-    document.body.style.background = "blue"
-  })
-})
-
+    document.body.style.background = "blue";
+  });
+});
 ```
 
 ![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/5/21/172368a480f5f3ef~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.image)
@@ -123,23 +118,22 @@ setTimeout(() => {
 
 接下来我们换成 `rAF` 试试？我们用一个递归函数来模拟 10 次颜色变化的动画。
 
-```
-let i = 10
+```js
+let i = 10;
 let req = () => {
-  i--
+  i--;
   requestAnimationFrame(() => {
-    document.body.style.background = "red"
+    document.body.style.background = "red";
     requestAnimationFrame(() => {
-      document.body.style.background = "blue"
+      document.body.style.background = "blue";
       if (i > 0) {
-        req()
+        req();
       }
-    })
-  })
-}
+    });
+  });
+};
 
-req()
-
+req();
 ```
 
 这里由于颜色变化太快，`gif` 录制软件没办法截出这么高帧率的颜色变换，所以各位可以放到浏览器中自己执行一下试试，我这边直接抛结论，浏览器会非常规律的把这 10 组也就是 20 次颜色变化绘制出来，可以看下 performance 面板记录的表现：
@@ -152,19 +146,18 @@ req()
 
 按照一些常规的理解来说，宏任务之间理应穿插渲染，而定时器任务就是一个典型的宏任务，看一下以下的代码：
 
-```
+```ts
 setTimeout(() => {
-  console.log("sto")
-  requestAnimationFrame(() => console.log("rAF"))
-})
+  console.log("sto");
+  requestAnimationFrame(() => console.log("rAF"));
+});
 setTimeout(() => {
-  console.log("sto")
-  requestAnimationFrame(() => console.log("rAF"))
-})
+  console.log("sto");
+  requestAnimationFrame(() => console.log("rAF"));
+});
 
-queueMicrotask(() => console.log("mic"))
-queueMicrotask(() => console.log("mic"))
-
+queueMicrotask(() => console.log("mic"));
+queueMicrotask(() => console.log("mic"));
 ```
 
 从直觉上来看，顺序是不是应该是：
@@ -193,8 +186,7 @@ rAF
 
 ```
 
-requestIdleCallback
--------------------
+## requestIdleCallback
 
 ### 草案解读
 
@@ -225,16 +217,11 @@ MDN 文档中的[幕后任务协作调度 API](https://link.juejin.cn/?target=ht
 草案中还提到：
 
 1.  当浏览器判断这个页面对用户不可见时，这个回调执行的频率可能被降低到 10 秒执行一次，甚至更低。这点在解读 EventLoop 中也有提及。
-    
 2.  如果浏览器的工作比较繁忙的时候，不能保证它会提供空闲时间去执行 `rIC` 的回调，而且可能会长期的推迟下去。所以如果你需要保证你的任务在一定时间内一定要执行掉，那么你可以给 `rIC` 传入第二个参数 `timeout`。  
     这会强制浏览器不管多忙，都在超过这个时间之后去执行 `rIC` 的回调函数。所以要谨慎使用，因为它会打断浏览器本身优先级更高的工作。
-    
 3.  最长期限为 50 毫秒，是根据研究得出的，研究表明，人们通常认为 100 毫秒内对用户输入的响应是瞬时的。 将闲置截止期限设置为 50ms 意味着即使在闲置任务开始后立即发生用户输入，浏览器仍然有剩余的 50ms 可以在其中响应用户输入而不会产生用户可察觉的滞后。
-    
 4.  每次调用 `timeRemaining()` 函数判断是否有剩余时间的时候，如果浏览器判断此时有优先级更高的任务，那么会动态的把这个值设置为 0，否则就是用预先设置好的 `deadline - now` 去计算。
-    
 5.  这个 `timeRemaining()` 的计算非常动态，会根据很多因素去决定，所以不要指望这个时间是稳定的。
-    
 
 ### 动画例子
 
@@ -254,7 +241,7 @@ MDN 文档中的[幕后任务协作调度 API](https://link.juejin.cn/?target=ht
 
 这个动画的例子很简单，就是利用`rAF`在每帧渲染前的回调中把方块的位置向右移动 10px。
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -272,29 +259,28 @@ MDN 文档中的[幕后任务协作调度 API](https://link.juejin.cn/?target=ht
   <body>
     <div id="SomeElementYouWantToAnimate"></div>
     <script>
-      var start = null
-      var element = document.getElementById("SomeElementYouWantToAnimate")
-      element.style.position = "absolute"
+      var start = null;
+      var element = document.getElementById("SomeElementYouWantToAnimate");
+      element.style.position = "absolute";
 
       function step(timestamp) {
-        if (!start) start = timestamp
-        var progress = timestamp - start
-        element.style.left = Math.min(progress / 10, 200) + "px"
+        if (!start) start = timestamp;
+        var progress = timestamp - start;
+        element.style.left = Math.min(progress / 10, 200) + "px";
         if (progress < 2000) {
-          window.requestAnimationFrame(step)
+          window.requestAnimationFrame(step);
         }
       }
       // 动画
-      window.requestAnimationFrame(step)
+      window.requestAnimationFrame(step);
 
       // 空闲调度
       window.requestIdleCallback(() => {
-        alert("rIC")
-      })
+        alert("rIC");
+      });
     </script>
   </body>
 </html>
-
 ```
 
 注意在最后我加了一个 `requestIdleCallback` 的函数，回调里会 `alert('rIC')`，来看一下演示效果：
@@ -305,21 +291,20 @@ MDN 文档中的[幕后任务协作调度 API](https://link.juejin.cn/?target=ht
 
 我们简单的修改一下 `step` 函数，在里面加一个很重的任务，1000 次循环打印。
 
-```
+```js
 function step(timestamp) {
-  if (!start) start = timestamp
-  var progress = timestamp - start
-  element.style.left = Math.min(progress / 10, 200) + "px"
-  let i = 1000
+  if (!start) start = timestamp;
+  var progress = timestamp - start;
+  element.style.left = Math.min(progress / 10, 200) + "px";
+  let i = 1000;
   while (i > 0) {
-    console.log("i", i)
-    i--
+    console.log("i", i);
+    i--;
   }
   if (progress < 2000) {
-    window.requestAnimationFrame(step)
+    window.requestAnimationFrame(step);
   }
 }
-
 ```
 
 再来看一下它的表现：
@@ -330,22 +315,22 @@ function step(timestamp) {
 
 如果给 `rIC` 函数加一个 `timeout` 呢：
 
-```
+```js
 // 空闲调度
 window.requestIdleCallback(
   () => {
-    alert("rID")
+    alert("rID");
   },
-  { timeout: 500 },
-)
-
+  { timeout: 500 }
+);
 ```
 
 ![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/5/21/17235e30289293f2~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.image)
 
 浏览器会在大概 `500ms` 的时候，不管有多忙，都去强制执行 `rIC` 函数，这个机制可以防止我们的空闲任务被“饿死”。
 
-总结
+### 总结
+
 --
 
 通过本文的学习过程，我自己也打破了很多对于 Event Loop 以及 rAF、rIC 函数的固有错误认知，通过本文我们可以整理出以下的几个关键点。

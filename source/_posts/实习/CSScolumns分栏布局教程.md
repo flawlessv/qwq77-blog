@@ -1,10 +1,10 @@
 ---
-title: 切换组件保持原本的状态
+title: CSScolumns分栏布局教程
 tags:
-  - 实习
+  - 实习收获
   - CSS
-# categories:
-#   - 前端
+categories:
+  - 实习
 ---
 
 ### 一、前言&索引

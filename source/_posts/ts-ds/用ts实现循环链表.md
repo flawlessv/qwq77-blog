@@ -3,6 +3,8 @@ title: 使用TypeScript实现循环链表
 cover: "https://www.dmoe.cc/random.php"
 tags:
   - TypeScript
+  - 链表
+categories:
   - 数据结构
 ---
 

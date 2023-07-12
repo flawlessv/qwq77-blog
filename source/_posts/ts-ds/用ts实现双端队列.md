@@ -3,6 +3,8 @@ title: 使用TypeScript实现双端队列
 cover: "https://www.dmoe.cc/random.php"
 tags:
   - TypeScript
+  - 队列
+categories:
   - 数据结构
 ---
 

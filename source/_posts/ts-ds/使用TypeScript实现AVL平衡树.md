@@ -2,6 +2,8 @@
 title: 使用TypeScript实现AVL平衡树
 tags:
   - TypeScript
+  - 二叉树
+categories:
   - 数据结构
 ---
 

@@ -1,12 +1,12 @@
 ---
 title: react为什么不能在循环/条件判断/嵌套函数中调用hooks
 tags:
-  - 实习
+  - 实习收获
   - React
-# categories:
-#   - 前端
+categories:
+  - 实习
 ---
-#### 问题
+### 问题
 1.在嵌套语句中无法使用自定义hooks，（图片生成后改变tab标题提醒用户
 ），必须使用自定义hooks=》清楚定时器并且在切换页面时改变对应的tab标题
 如果在条件语句中使用hooks，React会抛出 error。
