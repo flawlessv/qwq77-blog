@@ -3,7 +3,6 @@ title: 不使用任何库在react项目中实现图片懒加载
 tags:
   - React
   - 性能优化
-  
 ---
 可以使用Intersection Observer API来实现图片懒加载，它是一种现代的浏览器API，可以异步监测元素是否进入视口（viewport），从而触发相关操作。在React中，可以使用useRef hook获取img标签的引用，并通过创建一个IntersectionObserver实例观察它们是否可见。当目标元素进入视口时，就可以加载图片并显示。以下是一个简单的示例代码：
 ```tsx

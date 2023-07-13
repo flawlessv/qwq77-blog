@@ -2,7 +2,6 @@
 title: useEffect和useLayoutEffect的区别
 tags:
   - React
-  - 
 ---
 1. useEffect 是异步非阻塞，useLayoutEffect 是同步阻塞。
 2. useEffect 是在浏览器绘制之后执行，useLayoutEffect 是在 DOM 变更之后，浏览器绘制前执行
